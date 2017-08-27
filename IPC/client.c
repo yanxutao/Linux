@@ -1,5 +1,6 @@
 /*
  * client.c
+ * shm, sem and msg
  *
  *  Created on: Aug 27, 2017
  *      Author: yanxutao
