@@ -8,27 +8,30 @@
 int
 main(int argc, char *argv[])
 {
+  if (argc != 2)
+    {
+      fprintf(stderr, "usage: %s <string>\n", argv[0]);
+      exit(EXIT_FAILURE);
+    }
+
   int pipefd[2];
-  pid_t cpid;
+  if (pipe(pipefd) == -1)
+    {
+      perror("pipe error");
+      exit(EXIT_FAILURE);
+    }
+
+  pid_t cpid = fork();
+  if (cpid == -1)
+    {
+      perror("fork error");
+      exit(EXIT_FAILURE);
+    }
+
   char buf;
 
-  if (argc != 2) {
-      fprintf(stderr, "Usage: %s <string>\n", argv[0]);
-      exit(EXIT_FAILURE);
-  }
-
-  if (pipe(pipefd) == -1) {
-      perror("pipe");
-      exit(EXIT_FAILURE);
-  }
-
-  cpid = fork();
-  if (cpid == -1) {
-      perror("fork");
-      exit(EXIT_FAILURE);
-  }
-
-  if (cpid == 0) {
+  if (cpid == 0)
+    {
       close(pipefd[1]);
 
       pid_t pid = getpid();
@@ -46,7 +49,9 @@ main(int argc, char *argv[])
       close(pipefd[0]);
       exit(EXIT_SUCCESS);
 
-  } else {
+    }
+  else
+    {
       close(pipefd[0]);
 
       pid_t pid = getpid();
@@ -62,5 +67,5 @@ main(int argc, char *argv[])
 
       close(pipefd[1]);
       exit(EXIT_SUCCESS);
-  }
+    }
 }

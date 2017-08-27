@@ -9,22 +9,25 @@
 int
 main(int argc, char *argv[])
 {
-  if (mkfifo("fifo", 0666) < 0 && errno != EEXIST) {
-      perror("Create FIFO Failed");
+  if (mkfifo("fifo", 0666) < 0 && errno != EEXIST)
+    {
+      perror("create fifo failed");
       exit(EXIT_FAILURE);
-  }
+    }
 
   int fd;
-  if ((fd = open("fifo", O_RDONLY)) < 0) {
-      perror("Open FIFO Failed");
+  if ((fd = open("fifo", O_RDONLY)) < 0)
+    {
+      perror("open fifo failed");
       exit(EXIT_FAILURE);
-  }
+    }
 
   int len;
   char buf[1024];
-  while ((len = read(fd, buf, 1024)) > 0) {
+  while ((len = read(fd, buf, 1024)) > 0)
+    {
       write(STDOUT_FILENO, buf, len);
-  }
+    }
 
   close(fd);
   exit(EXIT_SUCCESS);
